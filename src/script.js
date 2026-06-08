@@ -41,12 +41,13 @@ fontLoader.load("/fonts/Hybrid_Bold.json", (font) => {
       bevelOffset: 0,
       bevelSegments: textParams.bevelSegments,
     });
+    textGeometry.computeBoundingBox();
+    console.log(textGeometry.boundingBox);
     textGeometry.center();
     return textGeometry;
   };
 
-  const textMaterial = new THREE.MeshBasicMaterial({ wireframe: false });
-  const text = new THREE.Mesh(buildText(), textMaterial);
+  const text = new THREE.Mesh(buildText(), material);
   scene.add(text);
 
   const rebuild = () => {
@@ -63,7 +64,10 @@ fontLoader.load("/fonts/Hybrid_Bold.json", (font) => {
  * Textures
  */
 const textureLoader = new THREE.TextureLoader();
+const matcapTexture = textureLoader.load('/textures/matcaps/7.png');
+matcapTexture.colorSpace = THREE.SRGBColorSpace;
 
+const material = new THREE.MeshMatcapMaterial({ matcap: matcapTexture });
 /**
  * Object
  */
@@ -73,6 +77,27 @@ const textureLoader = new THREE.TextureLoader();
 // );
 
 // scene.add(cube);
+
+//  Donut
+const donutGeometry = new THREE.TorusGeometry(0.3, 0.2, 20, 45)
+//const donutMaterial = new THREE.MeshMatcapMaterial({ matcap: matcapTexture })
+
+for (let i = 0; i < 100; i++)
+{
+    const donut = new THREE.Mesh(donutGeometry, material)
+
+//Randomize position
+    donut.position.x = (Math.random() - 0.5) * 10
+    donut.position.y = (Math.random() - 0.5) * 10
+    donut.position.z = (Math.random() - 0.5) * 10
+    donut.rotation.x = Math.random() * Math.PI
+    donut.rotation.y = Math.random() * Math.PI
+
+    const scale = Math.random()
+    donut.scale.set(scale, scale, scale)
+
+    scene.add(donut)
+}
 
 /**
  * Sizes
